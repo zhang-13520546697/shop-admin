@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fh.shop.mapper.category.CategoryMapper" >
+
+    <select id="findChildCategoryList" resultType="com.fh.shop.po.category.CategoryInfo" parameterType="int">
+        select id,categoryName,fid from t_category where fid = #{id}
+    </select>
+
+    <select id="queryCategory"  resultType="com.fh.shop.po.category.CategoryInfo">
+        select id,categoryName,fid from t_category
+    </select>
+
+    <insert id="addCategory" parameterType="com.fh.shop.po.category.CategoryInfo">
+        insert into t_category (categoryName,fid) values(#{categoryName},#{fid})
+    </insert>
+
+    <update id="updateCategory" parameterType="com.fh.shop.po.category.CategoryInfo">
+        update t_category set categoryName=#{categoryName} where id = #{id}
+    </update>
+
+    <delete id="deleteCategory" >
+        delete from t_category where id in
+        <foreach collection="list" item="ids" separator="," close=")" open="(">
+            #{ids}
+        </foreach>
+    </delete>
+
+</mapper>

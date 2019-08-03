@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fh.shop.mapper.rubbish.RubbishMapper" >
+    <sql id="query_product" >
+        where status = 3
+        <if test="productName != null and productName != ''">
+            and productName like concat('%',#{productName},'%')
+        </if>
+        <if test="startTime != null ">
+            and  p.createDate &gt;= #{startTime}
+        </if>
+        <if test="endTime != null ">
+            and  p.createDate &lt;= #{endTime}
+        </if>
+        <if test="maxPrice != null ">
+            and price &lt;= #{maxPrice}
+        </if>
+        <if test="minPrice != null ">
+            and price &gt;= #{minPrice}
+        </if>
+        <if test="brandId != null and brandId > 0" >
+            and brandId = #{brandId}
+        </if>
+        <if test="gc1 != null and gc1 > 0">
+            and gc1 = #{gc1}
+        </if>
+        <if test="gc2 != null and gc2 > 0">
+            and gc2 = #{gc2}
+        </if>
+        <if test="gc3 != null and gc3 > 0">
+            and gc3 = #{gc3}
+        </if>
+        <if test="isHot !=null ">
+            and isHot = #{isHot}
+        </if>
+        <if test="status !=null ">
+            and status = #{status}
+        </if>
+    </sql>
+
+    <select id="queryCount" resultType="long" parameterType="com.fh.shop.param.product.ProductSearchParam">
+        select count(*) from t_product p
+        <include refid="query_product"></include>
+
+    </select>
+
+    <select id="queryProductRubbishList" resultType="com.fh.shop.po.product.ProductInfo" parameterType="com.fh.shop.param.product.ProductSearchParam">
+        select t.* from (select p.id,productName,price productPrice,imgUrl productPhoto,p.createDate createTime,
+        brandName "brand.brandName",categoryName,gc1,gc2,gc3,isHot,status from t_product p
+        left join t_brand b on p.brandId = b.id
+        <include refid="query_product"></include>
+        order by id desc
+        ) t
+        limit #{start},#{length}
+    </select>
+
+    <update id="restoretAll">
+        update t_product set status = 2 where id in
+        <foreach collection="list" open="(" close=")" item="ids" separator=",">
+            #{ids}
+        </foreach>
+    </update>
+
+    <delete id="deleteProductAll">
+        delete from t_product where id in
+        <foreach collection="list" separator="," item="ids" close=")" open="(">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>

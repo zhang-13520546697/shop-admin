@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fh.shop.mapper.brand.IBrandMapper" >
+
+    <select id="queryCount"  resultType="long" parameterType="com.fh.shop.po.brand.BrandInfo">
+        select count(*) from t_brand where 1=1
+        <if test="brandName != null and brandName !=''">
+            and brandname like concat ('%',#{brandName},'%')
+        </if>
+    </select>
+
+    <select id="queryBrandList" resultType="com.fh.shop.po.brand.BrandInfo">
+        select t.* from   (
+          select  id,brandname,createDate,logourl,sort,isRecommend from t_brand where 1=1
+        <if test="brandInfo.brandName != null and brandInfo.brandName !=''">
+            and brandname like concat('%',#{brandInfo.brandName},'%')
+        </if>
+           order by sort, id desc
+        ) t
+         limit #{page.start},#{page.length}
+
+    </select>
+
+    <select id="findBrand" resultType="com.fh.shop.po.brand.BrandInfo">
+        select id,brandname from t_brand
+    </select>
+
+    <insert id="addBrand" parameterType="com.fh.shop.po.brand.BrandInfo">
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            select last_insert_id()
+        </selectKey>
+        insert into t_brand (brandname,createDate,logourl,sort) values(#{brandName},#{createDate},#{logoUrl},#{sort})
+    </insert>
+
+    <delete id="deletebrand" parameterType="int">
+        delete from t_brand where id = #{id}
+    </delete>
+
+    <select id="getBrandById" parameterType="int" resultType="com.fh.shop.po.brand.BrandInfo">
+        select id,brandname,createDate,logourl,sort from t_brand where id = #{id}
+    </select>
+
+    <update id="updateBrand" parameterType="com.fh.shop.po.brand.BrandInfo">
+        update t_brand set brandname=#{brandName},createDate=#{createDate},logourl=#{logoUrl},sort=#{sort}
+        where id = #{id}
+    </update>
+
+    <update id="updateBrandIsRecommend">
+        update t_brand set isRecommend = #{isRecommend}  where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <style>
+        body{
+            font-family: simhei;
+        }
+    </style>
+</head>
+<body>
+<div style="text-align: center;"><strong style="font-size: 50px">${companyName}</strong></div>
+<p style="text-align: left;"><strong><span style="color: #ff0000;">红头文件:</span></strong></p>
+<table align="center" style="width: 500px; margin-left: auto; margin-right: auto; height: 100px;" border="1" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+        <td style="width: 87.2px; text-align: center;">商品名称</td>
+        <td style="width: 80.8px; text-align: center;">品牌名称</td>
+        <td style="width: 76px; text-align: center;">价格</td>
+    </tr>
+    <#list products as p>
+        <tr>
+            <td style="width: 87.2px; text-align: center;">${p.productName}</td>
+            <td style="width: 80.8px; text-align: center;">${p.brand.brandName}</td>
+            <td style="width: 76px; text-align: center;">${p.productPrice}</td>
+        </tr>
+    </#list>
+    </tbody>
+</table>
+<div style="text-align: right;">单位：${companyName}</div>
+<div style="text-align: right;">日期：${createDate}</div>
+
+</body>
+</html>
